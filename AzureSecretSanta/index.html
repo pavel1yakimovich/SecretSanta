@@ -1,21 +1,25 @@
-﻿@model AzureSecretSanta.ViewModels.CreateUserViewModel
+﻿<html>
+<head>
 
-<div id="controlButton">
-    <input type="button" value="Get all registered users" onclick="getUsers()"/>
-</div>
-<div id="shuffleControl">
-    <input type="button" value="Shuffle users" onclick="shuffleUsers()"/>
-</div>
-<div id="content">
-    <p>Name: </p>
-    <input type="text" id="userName" />
-    <p>Email: </p>
-    <input type="text" id="email" />
-    <p>Description of the gift you wish: </p>
-    <input type="text" id="giftDescription"/>
-    <p><input type="submit" value="Register" onclick="addUser()"/></p>
-</div>
-@section scripts {
+</head>
+<body>
+    <div id="controlButton">
+        <input type="button" value="Get all registered users" onclick="getUsers()"/>
+    </div>
+    <div id="shuffleControl">
+        <input type="button" value="Shuffle users" onclick="shuffleUsers()"/>
+    </div>
+    <div id="content">
+        <p>Name: </p>
+        <input type="text" id="userName"/>
+        <p>Email: </p>
+        <input type="text" id="email"/>
+        <p>Description of the gift you wish: </p>
+        <input type="text" id="giftDescription"/>
+        <p><input type="submit" value="Register" onclick="addUser()"/></p>
+    </div>
+    
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
     <script type="text/javascript">
         var registerForm =
             $(
@@ -27,7 +31,11 @@
             $.ajax({
                 url: 'api/UserAction/registerNewUser',
                 type: 'POST',
-                data: { Name: $('#userName').val(), Email: $('#email').val(), GiftDescription: $('#giftDescription').val() },
+                data: {
+                    Name: $('#userName').val(),
+                    Email: $('#email').val(),
+                    GiftDescription: $('#giftDescription').val()
+                },
                 success: onSuccess
             });
         }
@@ -63,5 +71,5 @@
             $.post('api/userAction/shuffleUsers', {}, showUsers);
         }
     </script>
-    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-}
+</body>
+</html>
