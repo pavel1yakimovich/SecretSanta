@@ -3,73 +3,74 @@
 
 </head>
 <body>
-    <div id="controlButton">
-        <input type="button" value="Get all registered users" onclick="getUsers()"/>
-    </div>
-    <div id="shuffleControl">
-        <input type="button" value="Shuffle users" onclick="shuffleUsers()"/>
-    </div>
-    <div id="content">
-        <p>Name: </p>
-        <input type="text" id="userName"/>
-        <p>Email: </p>
-        <input type="text" id="email"/>
-        <p>Description of the gift you wish: </p>
-        <input type="text" id="giftDescription"/>
-        <p><input type="submit" value="Register" onclick="addUser()"/></p>
-    </div>
-    
-    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
-    <script type="text/javascript">
-        var registerForm =
-            $(
-                '<p>Name: </p><input type="text" id="userName"/><p>Email: </p><input type="text" id="email" /><p>Description of the gift you wish: </p><input type="text" id="giftDescription"/><p><input type="submit" value="Register" onclick="addUser()"/></p>');
-        var getUsersButton = $('<input type="button" value="Get all registered users" onclick="getUsers()"/>');
-        var showRegisterFormButton = $('<input type="button" value="Register new user" onclick="showRegisterForm()"/>');
+<p>tag for test</p>
+<div id="controlButton">
+    <input type="button" value="Get all registered users" onclick="getUsers()"/>
+</div>
+<div id="shuffleControl">
+    <input type="button" value="Shuffle users" onclick="shuffleUsers()"/>
+</div>
+<div id="content">
+    <p>Name: </p>
+    <input type="text" id="userName"/>
+    <p>Email: </p>
+    <input type="text" id="email"/>
+    <p>Description of the gift you wish: </p>
+    <input type="text" id="giftDescription"/>
+    <p><input type="submit" value="Register" onclick="addUser()"/></p>
+</div>
 
-        function addUser() {
-            $.ajax({
-                url: 'api/UserAction/registerNewUser',
-                type: 'POST',
-                data: {
-                    Name: $('#userName').val(),
-                    Email: $('#email').val(),
-                    GiftDescription: $('#giftDescription').val()
-                },
-                success: onSuccess
-            });
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+<script type="text/javascript">
+    var registerForm =
+        $(
+            '<p>Name: </p><input type="text" id="userName"/><p>Email: </p><input type="text" id="email" /><p>Description of the gift you wish: </p><input type="text" id="giftDescription"/><p><input type="submit" value="Register" onclick="addUser()"/></p>');
+    var getUsersButton = $('<input type="button" value="Get all registered users" onclick="getUsers()"/>');
+    var showRegisterFormButton = $('<input type="button" value="Register new user" onclick="showRegisterForm()"/>');
+
+    function addUser() {
+        $.ajax({
+            url: 'api/UserAction/registerNewUser',
+            type: 'POST',
+            data: {
+                Name: $('#userName').val(),
+                Email: $('#email').val(),
+                GiftDescription: $('#giftDescription').val()
+            },
+            success: onSuccess
+        });
+    }
+
+    function onSuccess(result) {
+        alert('You have been registered! Wait for the message');
+        getUsers();
+    }
+
+    function showUsers(result) {
+        var table = $('<table></table>');
+        for (var i = 0; i < result.length; i++) {
+            var row = $('<tr></tr>').html('<b>Name:</b> ' + result[i].Name);
+            table.append(row);
+            row = $('<tr></tr>').html('<b>Description of gift:</b> ' + result[i].GiftDescription);
+            table.append(row);
         }
 
-        function onSuccess(result) {
-            alert('You have been registered! Wait for the message');
-            getUsers();
-        }
+        $('#content').html(table);
+        $('#controlButton').html(showRegisterFormButton);
+    }
 
-        function showUsers(result) {
-            var table = $('<table></table>');
-            for (var i = 0; i < result.length; i++) {
-                var row = $('<tr></tr>').html('<b>Name:</b> ' + result[i].Name);
-                table.append(row);
-                row = $('<tr></tr>').html('<b>Description of gift:</b> ' + result[i].GiftDescription);
-                table.append(row);
-            }
+    function getUsers() {
+        $.get('api/userAction/getAllUsers', showUsers);
+    }
 
-            $('#content').html(table);
-            $('#controlButton').html(showRegisterFormButton);
-        }
+    function showRegisterForm() {
+        $('#controlButton').html(getUsersButton);
+        $('#content').html(registerForm);
+    }
 
-        function getUsers() {
-            $.get('api/userAction/getAllUsers', showUsers);
-        }
-
-        function showRegisterForm() {
-            $('#controlButton').html(getUsersButton);
-            $('#content').html(registerForm);
-        }
-
-        function shuffleUsers() {
-            $.post('api/userAction/shuffleUsers', {}, showUsers);
-        }
-    </script>
+    function shuffleUsers() {
+        $.post('api/userAction/shuffleUsers', {}, showUsers);
+    }
+</script>
 </body>
 </html>
