@@ -30,7 +30,7 @@ namespace AzureSecretSanta.Services
             };
             mail.To.Add(new MailAddress(to.Email));
 
-            smtpClient.Send(mail);
+            await smtpClient.SendMailAsync(mail);
         }
     }
 }
