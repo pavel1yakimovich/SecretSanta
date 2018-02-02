@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AzureSecretSanta.Models;
-using AzureSecretSanta.Repository;
 using AzureSecretSanta.Services;
 using AzureSecretSanta.Services.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,7 +17,7 @@ namespace AzureSecretSanta.Tests
             var mockedSmtpService = Substitute.For<ISmtpService>();
             mockedSmtpService.SendEmail(new UserModel(), new UserModel()).ReturnsForAnyArgs(Task.CompletedTask);
 
-            var mockedRepository = Substitute.For<IUserRepository>();
+            var mockedUserService = Substitute.For<IUserService>();
             var users = new List<UserModel>
             {
                 new UserModel {UserId = 1},
@@ -29,10 +26,9 @@ namespace AzureSecretSanta.Tests
                 new UserModel {UserId = 4},
             };
 
-            mockedRepository.GetAllUsersWithoutSanta().ReturnsForAnyArgs(users);
-            mockedRepository.UpdateUsers().ReturnsForAnyArgs(Task.CompletedTask);
+            mockedUserService.GetAllUsersWithoutSanta().ReturnsForAnyArgs(users);
 
-            var service = new SecretSantaService(mockedRepository, mockedSmtpService);
+            var service = new SecretSantaService(mockedUserService, mockedSmtpService);
 
             await service.ShuffleUsers();
 

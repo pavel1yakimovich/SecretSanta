@@ -17,7 +17,7 @@ namespace AzureSecretSanta.Repository
             this.db = ctx ?? new SecretSanta();
         }
 
-        public async Task<UserModel> AddNewUser(UserModel user)
+        public async Task<UserDto> AddNewUser(UserDto user)
         {
             var saveduser = db.Users.Add(user);
             await db.SaveChangesAsync();
@@ -25,19 +25,24 @@ namespace AzureSecretSanta.Repository
             return saveduser;
         }
 
-        public async Task<List<UserModel>> GetAllUsers()
+        public async Task<List<UserDto>> GetAllUsers()
         {
             var users = await db.Users.ToListAsync();
 
             return users;
         }
 
-        public async Task UpdateUsers()
+        public void UpdateUser(UserDto user)
+        {
+            db.Entry(user).State = EntityState.Modified;
+        }
+
+        public async Task Save()
         {
             await db.SaveChangesAsync();
         }
 
-        public async Task<List<UserModel>> GetAllUsersWithoutSanta()
+        public async Task<List<UserDto>> GetAllUsersWithoutSanta()
         {
             var usersWithoutSanta = await db.Users.Where(u => u.SantaOf == null).ToListAsync();
             return usersWithoutSanta;

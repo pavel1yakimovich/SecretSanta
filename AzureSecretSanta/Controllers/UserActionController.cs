@@ -7,33 +7,36 @@ using AzureSecretSanta.Models;
 using AzureSecretSanta.Services;
 using AzureSecretSanta.Services.Interfaces;
 using AzureSecretSanta.ViewModels;
+using AutoMapper;
+using System.Collections.Generic;
 
 namespace AzureSecretSanta.Controllers
 {
     public class UserActionController : ApiController
     {
-        private IUserService userService;
-        private ISecretSantaService secretSantaService;
+        private IUserService _userService;
+        private ISecretSantaService _secretSantaService;
+        private static IMapper _mapper = MappingProfile.InitializeAutoMapper().CreateMapper();
 
         public UserActionController(IUserService userService, ISecretSantaService secretSantaService)
         {
-            this.userService = userService;
-            this.secretSantaService = secretSantaService;
+            this._userService = userService;
+            this._secretSantaService = secretSantaService;
         }
 
         public UserActionController()
         {
-            this.userService = new UserService();
-            this.secretSantaService = new SecretSantaService();
+            this._userService = new UserService();
+            this._secretSantaService = new SecretSantaService();
         }
 
         [HttpPost]
         [ActionName("registerNewUser")]
         public async Task<IHttpActionResult> AddToSecretSantaList([FromBody] CreateUserViewModel newUser)
         {
-            UserModel user = newUser.CreateUserViewModelToUser();
+            UserModel user = _mapper.Map<UserModel>(newUser);
 
-            user = await userService.AddNewUser(user);
+            user = await _userService.AddNewUser(user);
 
             return Ok(user);
         }
@@ -41,9 +44,9 @@ namespace AzureSecretSanta.Controllers
         [ActionName("getAllUsers")]
         public async Task<IHttpActionResult> GetAllUsers()
         {
-            var users = await userService.GetAllUsers();
+            var users = await _userService.GetAllUsers();
 
-            var userViewModels = users.Select(u => u.UserModelToUserViewModel()).ToList();
+            var userViewModels = _mapper.Map<IEnumerable<UserViewModel>>(users).ToList();
 
             return Ok(userViewModels);
         }
@@ -52,7 +55,7 @@ namespace AzureSecretSanta.Controllers
         [ActionName("shuffleUsers")]
         public async Task<IHttpActionResult> ShuffleUsers()
         {
-            await secretSantaService.ShuffleUsers();
+            await _secretSantaService.ShuffleUsers();
 
             return Ok();
         }

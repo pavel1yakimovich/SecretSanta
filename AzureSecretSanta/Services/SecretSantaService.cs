@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AzureSecretSanta.Interfaces.Services;
-using AzureSecretSanta.Repository;
 using AzureSecretSanta.Services.Interfaces;
+using System.Linq;
 
 namespace AzureSecretSanta.Services
 {
     public class SecretSantaService : ISecretSantaService
     {
-        private IUserRepository userRepository;
-        private ISmtpService smtpService;
+        private IUserService _userService;
+        private ISmtpService _smtpService;
 
-        public SecretSantaService(IUserRepository userRepository = null, ISmtpService smtpService = null)
+        public SecretSantaService(IUserService userService = null, ISmtpService smtpService = null)
         {
-            this.userRepository = userRepository ?? new UserRepository();
-            this.smtpService = smtpService ?? new SmtpService();
+            this._userService = userService ?? new UserService();
+            this._smtpService = smtpService ?? new SmtpService();
         }
 
         public async Task ShuffleUsers()
         {
-            var users = await this.userRepository.GetAllUsersWithoutSanta();
+            var users = await this._userService.GetAllUsersWithoutSanta();
 
             var pool = new List<int>();
             foreach (var user in users)
@@ -38,7 +38,7 @@ namespace AzureSecretSanta.Services
 
                 if (pool.Count == 0)
                 {
-                    users.Find(u => u.UserId == person).SantaOf = users.Find(u => u.UserId == userIdWithoutSanta);
+                    users.Find(u => u.UserId == person).SantaOf = users.First(u => u.UserId == userIdWithoutSanta);
                     break;
                 }
 
@@ -49,10 +49,10 @@ namespace AzureSecretSanta.Services
 
             foreach (var user in users)
             {
-                await this.smtpService.SendEmail(user, user.SantaOf);
+                await this._smtpService.SendEmail(user, user.SantaOf);
             }
 
-            await this.userRepository.UpdateUsers();
+            users.Select(async u => await this._userService.UpdateUser(u));
         }
     }
 }

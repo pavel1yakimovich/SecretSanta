@@ -6,9 +6,10 @@ namespace AzureSecretSanta.Repository
 {
     public interface IUserRepository
     {
-        Task<UserModel> AddNewUser(UserModel user);
-        Task<List<UserModel>> GetAllUsers();
-        Task UpdateUsers();
-        Task<List<UserModel>> GetAllUsersWithoutSanta();
+        Task<UserDto> AddNewUser(UserDto user);
+        Task<List<UserDto>> GetAllUsers();
+        Task Save();
+        void UpdateUser(UserDto user);
+        Task<List<UserDto>> GetAllUsersWithoutSanta();
     }
 }
