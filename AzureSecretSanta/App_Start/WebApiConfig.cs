@@ -1,17 +1,23 @@
-﻿using System;
+﻿using AzureSecretSanta.Infrastructure.Dependency_Injection;
+using Castle.Windsor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Dispatcher;
 
 namespace AzureSecretSanta
 {
     public static class WebApiConfig
     {
-        public static void Register(HttpConfiguration config)
+        public static void Register(HttpConfiguration config, IWindsorContainer container)
         {
-            // Web API configuration and services
+            MapRoutes(config);
+            RegisterControllerActivator(container);
+        }
 
-            // Web API routes
+        private static void MapRoutes(HttpConfiguration config)
+        {
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
@@ -19,6 +25,12 @@ namespace AzureSecretSanta
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+        }
+
+        private static void RegisterControllerActivator(IWindsorContainer container)
+        {
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator),
+                new WindsorCompositionRoot(container));
         }
     }
 }

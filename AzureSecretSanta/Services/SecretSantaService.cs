@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AzureSecretSanta.Interfaces.Services;
 using AzureSecretSanta.Services.Interfaces;
 using System.Linq;
 

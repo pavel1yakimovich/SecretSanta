@@ -2,9 +2,7 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 using AzureSecretSanta.Infrastructure;
-using AzureSecretSanta.Interfaces.Services;
 using AzureSecretSanta.Models;
-using AzureSecretSanta.Services;
 using AzureSecretSanta.Services.Interfaces;
 using AzureSecretSanta.ViewModels;
 using AutoMapper;
@@ -24,11 +22,11 @@ namespace AzureSecretSanta.Controllers
             this._secretSantaService = secretSantaService;
         }
 
-        public UserActionController()
-        {
-            this._userService = new UserService();
-            this._secretSantaService = new SecretSantaService();
-        }
+        //public UserActionController()
+        //{
+        //    this._userService = new UserService();
+        //    this._secretSantaService = new SecretSantaService();
+        //}
 
         [HttpPost]
         [ActionName("registerNewUser")]

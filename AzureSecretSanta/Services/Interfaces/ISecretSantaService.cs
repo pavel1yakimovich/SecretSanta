@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AzureSecretSanta.Interfaces.Services
+namespace AzureSecretSanta.Services.Interfaces
 {
     public interface ISecretSantaService
     {
