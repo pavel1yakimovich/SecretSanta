@@ -10,10 +10,7 @@ namespace AzureSecretSanta.Infrastructure.Dependency_Injection
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(
-                Component.For<IUserService>().ImplementedBy<UserService>().LifestylePerWebRequest());
-            container.Register(
-                Component.For<ISecretSantaService>().ImplementedBy<SecretSantaService>().LifestylePerWebRequest());
+            container.Register(Classes.FromThisAssembly().Where(type => type.Name.EndsWith("Service")).WithService.DefaultInterfaces());
         }
     }
 }
