@@ -11,10 +11,10 @@ namespace AzureSecretSanta.Services
         private IUserService _userService;
         private ISmtpService _smtpService;
 
-        public SecretSantaService(IUserService userService = null, ISmtpService smtpService = null)
+        public SecretSantaService(IUserService userService, ISmtpService smtpService)
         {
-            this._userService = userService ?? new UserService();
-            this._smtpService = smtpService ?? new SmtpService();
+            this._userService = userService;
+            this._smtpService = smtpService;
         }
 
         public async Task ShuffleUsers()
