@@ -11,12 +11,13 @@ namespace AzureSecretSanta.Services
 {
     public class UserService : IUserService
     {
-        private static IMapper _mapper = MappingProfile.InitializeAutoMapper().CreateMapper();
+        private IMapper _mapper;
         private IUserRepository _userRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             this._userRepository = userRepository;
+            this._mapper = mapper;
         }
 
         public async Task<UserModel> AddNewUser(UserModel user)

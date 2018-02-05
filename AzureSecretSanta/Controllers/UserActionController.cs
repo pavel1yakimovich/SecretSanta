@@ -14,12 +14,13 @@ namespace AzureSecretSanta.Controllers
     {
         private IUserService _userService;
         private ISecretSantaService _secretSantaService;
-        private static IMapper _mapper = MappingProfile.InitializeAutoMapper().CreateMapper();
+        private IMapper _mapper;
 
-        public UserActionController(IUserService userService, ISecretSantaService secretSantaService)
+        public UserActionController(IUserService userService, ISecretSantaService secretSantaService, IMapper mapper)
         {
             this._userService = userService;
             this._secretSantaService = secretSantaService;
+            this._mapper = mapper;
         }
 
         //public UserActionController()
