@@ -78,12 +78,4 @@ namespace AzureSecretSanta.Infrastructure.Dependency_Injection
             this._scope.Dispose();
         }
     }
-
-    public class ApiControllersInstaller : IWindsorInstaller
-    {
-        public void Install(IWindsorContainer container, IConfigurationStore store)
-        {
-            container.Register(Classes.FromThisAssembly().BasedOn<ApiController>().LifestylePerWebRequest());
-        }
-    }
 }
