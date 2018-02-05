@@ -1,11 +1,7 @@
-﻿using Castle.MicroKernel.Lifestyle;
-using Castle.MicroKernel.Registration;
-using Castle.MicroKernel.SubSystems.Configuration;
-using Castle.Windsor;
+﻿using Castle.Windsor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
 using System.Web.Http.Dependencies;
 
 namespace AzureSecretSanta.Infrastructure.Dependency_Injection
@@ -21,7 +17,7 @@ namespace AzureSecretSanta.Infrastructure.Dependency_Injection
 
         public IDependencyScope BeginScope()
         {
-            return new WindsorDependencyScope(_container);
+            return new WindsorDependencyResolver(_container);
         }
 
         public object GetService(Type serviceType)
@@ -42,40 +38,6 @@ namespace AzureSecretSanta.Infrastructure.Dependency_Injection
         public void Dispose()
         {
             _container.Dispose();
-        }
-    }
-
-    public class WindsorDependencyScope : IDependencyScope
-    {
-        private readonly IWindsorContainer _container;
-        private readonly IDisposable _scope;
-
-        public WindsorDependencyScope(IWindsorContainer container)
-        {
-            this._container = container;
-            this._scope = container.BeginScope();
-        }
-
-        public object GetService(Type serviceType)
-        {
-            if (_container.Kernel.HasComponent(serviceType))
-            {
-                return _container.Resolve(serviceType);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public IEnumerable<object> GetServices(Type serviceType)
-        {
-            return this._container.ResolveAll(serviceType).Cast<object>();
-        }
-
-        public void Dispose()
-        {
-            this._scope.Dispose();
         }
     }
 }
